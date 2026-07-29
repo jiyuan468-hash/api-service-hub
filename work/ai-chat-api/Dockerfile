@@ -6,8 +6,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 统一用相对路径复制到 WORKDIR（/app）
-COPY main.py .
-COPY config.yaml .
+COPY main.py ../main.py
+COPY config.yaml ../config.yaml
 
 ENV PYTHONUNBUFFERED=1
 EXPOSE 8000
