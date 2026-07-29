@@ -52,7 +52,7 @@
     .result-box.error { border-color: var(--danger); color: #fca5a5; }
     .result-box.success { border-color: var(--success); color: #86efac; }
     .section { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); padding: 20px; margin-bottom: 20px; }
-    .section-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+    .section-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(text); }
     .api-form { display: grid; gap: 12px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; display: block; }
@@ -61,8 +61,6 @@
     textarea { font-family: Consolas, monospace; min-height: 80px; resize: vertical; }
     .submit-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; color: white; background: var(--gradient1); transition: opacity 0.2; }
     .submit-btn:hover { opacity: 0.9; } .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .loading { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 8px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
     @media (max-width: 768px) { .form-row { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -84,27 +82,15 @@
     <div class="services-grid">
       <div class="service-card">
         <div class="card-header chat"><div class="card-title">🤖 AI 聊天接口</div><div class="card-desc">多模型对话，支持 GPT/Claude/Ollama</div><span class="card-port">https://chat-api-service-45kp.onrender.com</span></div>
-        <div class="card-body">
-          <pre>POST /chat/completions{"model":"gpt-3.5-turbo","messages":[{"role":"user","content":"你好"}]}</pre>
-          <button class="test-btn btn-chat" onclick="testChat()">测试聊天 API</button>
-          <div class="result-box" id="result-chat"></div>
-        </div>
+        <div class="card-body"><pre>POST /chat/completions{"model":"gpt-3.5-turbo","messages":[{"role":"user","content":"你好"}]}</pre><button class="test-btn btn-chat" onclick="testChat()">测试聊天 API</button><div class="result-box" id="result-chat"></div></div>
       </div>
       <div class="service-card">
         <div class="card-header data"><div class="card-title">📄 文档转换</div><div class="card-desc">PDF/Excel/Word 格式互转</div><span class="card-port">https://data-api-service.onrender.com</span></div>
-        <div class="card-body">
-          <pre>GET /health → 检查服务状态支持的格式：PDF, DOCX, XLSX, CSV</pre>
-          <button class="test-btn btn-data" onclick="testData()">测试数据 API</button>
-          <div class="result-box" id="result-data"></div>
-        </div>
+        <div class="card-body"><pre>GET /health → 检查服务状态支持的格式：PDF, DOCX, XLSX, CSV</pre><button class="test-btn btn-data" onclick="testData()">测试数据 API</button><div class="result-box" id="result-data"></div></div>
       </div>
       <div class="service-card">
         <div class="card-header scraper"><div class="card-title">🕷️ 网页爬虫</div><div class="card-desc">自动化数据采集，反反爬机制</div><span class="card-port">https://scraper-api-service.onrender.com</span></div>
-        <div class="card-body">
-          <pre>POST /scrape/url{"url":"https://example.com","extract_fields":["title","paragraphs"]}</pre>
-          <button class="test-btn btn-scraper" onclick="testScraper()">测试爬虫 API</button>
-          <div class="result-box" id="result-scraper"></div>
-        </div>
+        <div class="card-body"><pre>POST /scrape/url{"url":"https://example.com","extract_fields":["title","paragraphs"]}</pre><button class="test-btn btn-scraper" onclick="testScraper()">测试爬虫 API</button><div class="result-box" id="result-scraper"></div></div>
       </div>
     </div>
     <div class="section"><div class="section-title">💬 AI 对话测试</div><div class="api-form"><div class="form-row"><div><label>API Key</label><input type="text" id="chat-key" placeholder="your-api-key-here" value=""></div><div><label>模型</label><select id="chat-model"><option value="gpt-3.5-turbo">GPT-3.5 Turbo</option><option value="gpt-4">GPT-4</option><option value="claude-3-haiku">Claude 3 Haiku</option><option value="llama3">Llama 3</option></select></div></div><div><label>消息内容</label><textarea id="chat-message">请用一句话介绍你自己，并说一个冷笑话。</textarea></div><button class="submit-btn" onclick="sendChat()">发送消息</button><div class="result-box" id="chat-response"></div></div></div>
@@ -112,28 +98,153 @@
   </div>
   <div class="footer" style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px;">Built with FastAPI · Three services, one dashboard</div>
   <script>
-    // 正确配置三个服务的 URL！
+    // 🔑 三个服务的正确URL - 分别指向各自独立的Render服务！
+    const CHAT_URL = 'https://chat-api-service-45kp.onrender.com';
+    const DATA_URL = 'https://data-api-service.onrender.com';
+    const SCRAPER_URL = 'https://scraper-api-service.onrender.com';
+
     async function checkHealth(){
       const services=[
-        {id:'dot-chat',url:'https://chat-api-service-45kp.onrender.com/health'},
-        {id:'dot-data',url:'https://data-api-service.onrender.com/health'},
-        {id:'dot-scraper',url:'https://scraper-api-service.onrender.com/health'}
+        {id:'dot-chat',url:CHAT_URL+'/health'},
+        {id:'dot-data',url:DATA_URL+'/health'}, 
+        {id:'dot-scraper',url:SCRAPER_URL+'/health'}
       ];
       for(const s of services){
-        try{const resp=await fetch(s.url);const dot=document.getElementById(s.id);resp.ok?dot.classList.add('online'):dot.classList.remove('online')}catch{document.getElementById(s.id).classList.remove('online')}}
+        try{
+          const resp=await fetch(s.url);
+          const dot=document.getElementById(s.id);
+          resp.ok ? dot.classList.add('online') : dot.classList.remove('online');
+        }catch(e){
+          document.getElementById(s.id).classList.remove('online');
+        }
       }
-      checkHealth();setInterval(checkHealth,5000);
+      setInterval(checkHealth, 5000);  // 每5秒自动检查一次
     }
-    async function testChat(){const el=document.getElementById('result-chat');el.textContent='Connecting...';el.className='result-box';try{const resp=await fetch('https://chat-api-service-45kp.onrender.com/health');const data=await resp.json();el.textContent=JSON.stringify(data,null,2);el.className='result-box.success'}catch(err){el.textContent='❌ Chat API 未运行，请先检查';el.className='result-box.error'}}
-    async function testData(){const el=document.getElementById('result-data');el.textContent='Connecting...';el.className='result-box';try{const resp=await fetch('https://data-api-service.onrender.com/health');const data=await resp.json();el.textContent=JSON.stringify(data,null,2);el.className='result-box.success'}catch(err){el.textContent='❌ Data API 未运行，请先检查';el.className='result-box.error'}}
-    async function testScraper(){const el=document.getElementById('result-scraper');el.textContent='Connecting...';el.className='result-box';try{const resp=await fetch('https://scraper-api-service.onrender.com/health');const data=await resp.json();el.textContent=JSON.stringify(data,null,2);el.className='result-box.success'}catch(err){el.textContent='❌ Scraper API 未运行，请先检查';el.className='result-box.error'}}
-    async function sendChat(){const key=document.getElementById('chat-key').value,model=document.getElementById('chat-model').value,msg=document.getElementById('chat-message').value,el=document.getElementById('chat-response');el.textContent='请求中...';el.className='result-box';try{const resp=await fetch('https://chat-api-service-45kp.onrender.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','X-API-Key':key||'test'},body:JSON.stringify({model:model,messages:[{role:'user',content:msg}],temperature:0.7})});const data=await resp.json();el.textContent=data.choices[0].message.content;el.className='result-box.success'}catch(err){el.textContent='❌ Chat API 连接失败，请检查';el.className='result-box.error'}}
-    async function doScrape(){const url=document.getElementById('scraper-url').value,key=document.getElementById('scraper-key').value,el=document.getElementById('scraper-response');el.textContent='正在抓取...';el.className='result-box';try{const resp=await fetch('https://scraper-api-service.onrender.com/scrape/url',{method:'POST',headers:{'Content-Type':'application/json','X-API-Key':key||'test'},body:JSON.stringify({url:url,extract_fields:['title','paragraphs','links']})});const data=await resp.json();el.textContent=JSON.stringify(data,null,2);el.className=data.status==='completed'?'result-box success':'result-box error'}catch(err){el.textContent='❌ Scraper API 连接失败，请检查';el.className='result-box.error'}}
-    function toggleTheme(){const theme=document.documentElement.getAttribute('theme')==='light'?'light':'dark';document.documentElement.setAttribute('theme',theme);document.body.setAttribute('data-theme',theme);document.querySelector('.toggle-theme').textContent=theme==='light'?'🌙 夜间':'☀️ 日间';localStorage.setItem('theme',theme);}
+
+    async function testChat(){
+      const el=document.getElementById('result-chat');
+      el.textContent='Connecting...';
+      el.className='result-box';
+      try{
+        const resp=await fetch(CHAT_URL+'/health');
+        const data=await resp.json();
+        el.textContent=JSON.stringify(data,null,2);
+        el.className='result-box.success';
+      }catch(err){
+        el.textContent='❌ Chat API未运行';
+        el.className='result-box.error';
+      }
+    }
+
+    async function testData(){
+      const el=document.getElementById('result-data');
+      el.textContent='Connecting...';
+      el.className='result-box';
+      try{
+        const resp=await fetch(DATA_URL+'/health');
+        const data=await resp.json();
+        el.textContent=JSON.stringify(data,null,2);
+        el.className='result-box.success';
+      }catch(err){
+        el.textContent='❌ Data API未运行';
+        el.className='result-box.error';
+      }
+    }
+
+    async function testScraper(){
+      const el=document.getElementById('result-scraper');
+      el.textContent='Connecting...';
+      el.className='result-box';
+      try{
+        const resp=await fetch(SCRAPER_URL+'/health');
+        const data=await resp.json();
+        el.textContent=JSON.stringify(data,null,2);
+        el.className='result-box.success';
+      }catch(err){
+        el.textContent='❌ Scraper API未运行';
+        el.className='result-box.error';
+      }
+    }
+
+    async function sendChat(){
+      const key=document.getElementById('chat-key').value;
+      const model=document.getElementById('chat-model').value;
+      const msg=document.getElementById('chat-message').value;
+      const el=document.getElementById('chat-response');
+      el.textContent='请求中...';
+      el.className='result-box';
+      
+      try{
+        const resp=await fetch(CHAT_URL+'/chat/completions',{
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'X-API-Key':key || 'test'
+          },
+          body:JSON.stringify({
+            model:model,
+            messages:[{role:'user',content:msg}],
+            temperature:0.7
+          })
+        });
+        const data=await resp.json();
+        if(data.choices && data.choices[0].message){
+          el.textContent=data.choices[0].message.content;
+          el.className='result-box.success';
+        }else{
+          el.textContent=JSON.stringify(data,null,2);
+          el.className='result-box.error';
+        }
+      }catch(err){
+        el.textContent='❌ Chat API连接失败';
+        el.className='result-box.error';
+      }
+    }
+
+    async function doScrape(){
+      const url=document.getElementById('scraper-url').value;
+      const key=document.getElementById('scraper-key').value;
+      const el=document.getElementById('scraper-response');
+      el.textContent='正在抓取 '+url+'...';
+      el.className='result-box';
+      
+      try{
+        const resp=await fetch(SCRAPER_URL+'/scrape/url',{
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'X-API-Key':key || 'test'
+          },
+          body:JSON.stringify({
+            url:url,
+            extract_fields:['title','paragraphs','links']
+          })
+        });
+        const data=await resp.json();
+        el.textContent=JSON.stringify(data,null,2);
+        el.className=data.status==='completed'?'result-box success':'result-box error';
+      }catch(err){
+        el.textContent='❌ Scraper API连接失败';
+        el.className='result-box.error';
+      }
+    }
+
+    function toggleTheme(){
+      const theme=document.documentElement.getAttribute('theme')==='light'?'light':'dark';
+      document.documentElement.setAttribute('theme',theme);
+      document.body.setAttribute('data-theme',theme);
+      document.querySelector('.toggle-theme').textContent=theme==='light'?'🌙 夜间':'☀️ 日间';
+      localStorage.setItem('theme',theme);
+    }
+
+    // 加载上次主题
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('theme', savedTheme);
     document.body.setAttribute('data-theme', savedTheme);
     document.querySelector('.toggle-theme').textContent = savedTheme === 'light' ? '🌙 夜间' : '☀️ 日间';
+
+    // 初始化健康检查
+    checkHealth();
   </script>
 </body>
 </html>
