@@ -1,0 +1,20 @@
+﻿# Web Scraper API Configuration
+
+auth:
+  api_key: "your-api-key-here"  # Change this in production!
+
+database:
+  path: "./scraper_data.db"
+
+rate_delay:
+  min_seconds: 1.0   # Minimum delay between requests
+  max_seconds: 3.0   # Maximum random delay
+
+scraping:
+  max_retries: 3     # Retry count on failure
+  timeout: 30        # Request timeout in seconds
+  max_pages_per_job: 100
+
+server:
+  host: "0.0.0.0"
+  port: 8002
