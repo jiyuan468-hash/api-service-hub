@@ -52,7 +52,7 @@
     .result-box.error { border-color: var(--danger); color: #fca5a5; }
     .result-box.success { border-color: var(--success); color: #86efac; }
     .section { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); padding: 20px; margin-bottom: 20px; }
-    .section-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(text); }
+    .section-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
     .api-form { display: grid; gap: 12px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; display: block; }
@@ -118,7 +118,7 @@
           document.getElementById(s.id).classList.remove('online');
         }
       }
-      setInterval(checkHealth, 5000);  // 每5秒自动检查一次
+      setInterval(checkHealth, 5000);
     }
 
     async function testChat(){
@@ -196,7 +196,7 @@
           el.className='result-box.error';
         }
       }catch(err){
-        el.textContent='❌ Chat API连接失败';
+        el.textContent='❌ Chat API连接失败，请确保 Chat API 已启动';
         el.className='result-box.error';
       }
     }
@@ -224,7 +224,7 @@
         el.textContent=JSON.stringify(data,null,2);
         el.className=data.status==='completed'?'result-box success':'result-box error';
       }catch(err){
-        el.textContent='❌ Scraper API连接失败';
+        el.textContent='❌ Scraper API连接失败，请确保 Scraper API 已启动';
         el.className='result-box.error';
       }
     }
@@ -237,13 +237,11 @@
       localStorage.setItem('theme',theme);
     }
 
-    // 加载上次主题
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('theme', savedTheme);
     document.body.setAttribute('data-theme', savedTheme);
     document.querySelector('.toggle-theme').textContent = savedTheme === 'light' ? '🌙 夜间' : '☀️ 日间';
 
-    // 初始化健康检查
     checkHealth();
   </script>
 </body>
