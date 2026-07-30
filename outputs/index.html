@@ -5,25 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>API Service Hub — 统一管理面板</title>
   <style>
-    :root {
-      --primary: #6366f1; --primary-dark: #4f46e5; --success: #10b981;
-      --danger: #ef4444; --bg: #0f172a; --card-bg: #1e293b; --text: #e2e8f0;
-      --text-muted: #94a3b8; --border: #334155; --gradient1: linear-gradient(135deg, #6366f1, #8b5cf6);
-      --gradient2: linear-gradient(135deg, #10b981, #059669); --gradient3: linear-gradient(135deg, #f59e0b, #d97706);
-    }
-    :root[data-theme="light"] {
-      --bg: #f8fafc; --card-bg: #ffffff; --text: #1e293b; --text-muted: #64748b; --border: #e2e8f0;
-    }
+    :root { --primary: #6366f1; --primary-dark: #4f46e5; --success: #10b981; --danger: #ef4444; --bg: #0f172a; --card-bg: #1e293b; --text: #e2e8f0; --text-muted: #94a3b8; --border: #334155; --gradient1: linear-gradient(135deg, #6366f1, #8b5cf6); --gradient2: linear-gradient(135deg, #10b981, #059669); --gradient3: linear-gradient(135deg, #f59e0b, #d97706); }
+    :root[data-theme="light"] { --bg: #f8fafc; --card-bg: #ffffff; --text: #1e293b; --text-muted: #64748b; --border: #e2e8f0; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg); color: var(--text); min-height: 100vh;
-      transition: background 0.3s, color 0.3s;
-    }
-    .header {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-bottom: 1px solid var(--border);
-      padding: 16px 0; position: sticky; top: 0; z-index: 100;
-    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+    .header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-bottom: 1px solid var(--border); padding: 16px 0; position: sticky; top: 0; z-index: 100; }
     .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
     .logo { font-size: 22px; font-weight: 700; background: var(--gradient1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .toggle-theme { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
@@ -93,12 +79,11 @@
         <div class="card-body"><pre>POST /scrape/url{"url":"https://example.com","extract_fields":["title","paragraphs"]}</pre><button class="test-btn btn-scraper" onclick="testScraper()">测试爬虫 API</button><div class="result-box" id="result-scraper"></div></div>
       </div>
     </div>
-    <div class="section"><div class="section-title">💬 AI 对话测试</div><div class="api-form"><div class="form-row"><div><label>API Key</label><input type="text" id="chat-key" placeholder="your-api-key-here" value=""></div><div><label>模型</label><select id="chat-model"><option value="gpt-3.5-turbo">GPT-3.5 Turbo</option><option value="gpt-4">GPT-4</option><option value="claude-3-haiku">Claude 3 Haiku</option><option value="llama3">Llama 3</option></select></div></div><div><label>消息内容</label><textarea id="chat-message">请用一句话介绍你自己，并说一个冷笑话。</textarea></div><button class="submit-btn" onclick="sendChat()">发送消息</button><div class="result-box" id="chat-response"></div></div></div>
-    <div class="section"><div class="section-title">🔍 网页抓取测试</div><div class="api-form"><div class="form-row"><div><label>目标 URL</label><input type="url" id="scraper-url" placeholder="https://example.com" value="https://www.baidu.com"></div><div><label>API Key</label><input type="text" id="scraper-key" placeholder="your-api-key-here" value=""></div></div><button class="submit-btn btn-scraper" onclick="doScrape()">开始抓取</button><div class="result-box" id="scraper-response"></div></div></div>
+    <div class="section"><div class="section-title">💬 AI 对话测试</div><div class="api-form"><div class="form-row"><div><label>API Key</label><input type="text" id="chat-key" placeholder="your-api-key-here" value="1"></div><div><label>模型</label><select id="chat-model"><option value="gpt-3.5-turbo">GPT-3.5 Turbo</option><option value="gpt-4">GPT-4</option><option value="claude-3-haiku">Claude 3 Haiku</option><option value="llama3">Llama 3</option></select></div></div><div><label>消息内容</label><textarea id="chat-message">请用一句话介绍你自己，并说一个冷笑话。</textarea></div><button class="submit-btn" onclick="sendChat()">发送消息</button><div class="result-box" id="chat-response"></div></div></div>
+    <div class="section"><div class="section-title">🔍 网页抓取测试</div><div class="api-form"><div class="form-row"><div><label>目标 URL</label><input type="url" id="scraper-url" placeholder="https://example.com" value="https://www.baidu.com"></div><div><label>API Key</label><input type="text" id="scraper-key" placeholder="your-api-key-here" value="test"></div></div><button class="submit-btn btn-scraper" onclick="doScrape()">开始抓取</button><div class="result-box" id="scraper-response"></div></div></div>
   </div>
   <div class="footer" style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px;">Built with FastAPI · Three services, one dashboard</div>
   <script>
-    // ✅ 三个服务的本地URL - 都指向本地运行的服务！
     const CHAT_URL = 'http://127.0.0.1:8000';
     const DATA_URL = 'http://127.0.0.1:8001';
     const SCRAPER_URL = 'http://127.0.0.1:8002';
@@ -114,9 +99,7 @@
           const resp=await fetch(s.url);
           const dot=document.getElementById(s.id);
           resp.ok ? dot.classList.add('online') : dot.classList.remove('online');
-        }catch(e){
-          document.getElementById(s.id).classList.remove('online');
-        }
+        }catch(e){ document.getElementById(s.id).classList.remove('online'); }
       }
       setInterval(checkHealth, 5000);
     }
@@ -130,10 +113,7 @@
         const data=await resp.json();
         el.textContent=JSON.stringify(data,null,2);
         el.className='result-box.success';
-      }catch(err){
-        el.textContent='❌ Chat API未运行';
-        el.className='result-box.error';
-      }
+      }catch(err){ el.textContent='❌ Chat API未运行'; el.className='result-box.error'; }
     }
 
     async function testData(){
@@ -145,10 +125,7 @@
         const data=await resp.json();
         el.textContent=JSON.stringify(data,null,2);
         el.className='result-box.success';
-      }catch(err){
-        el.textContent='❌ Data API未运行';
-        el.className='result-box.error';
-      }
+      }catch(err){ el.textContent='❌ Data API未运行'; el.className='result-box.error'; }
     }
 
     async function testScraper(){
@@ -160,10 +137,7 @@
         const data=await resp.json();
         el.textContent=JSON.stringify(data,null,2);
         el.className='result-box.success';
-      }catch(err){
-        el.textContent='❌ Scraper API未运行';
-        el.className='result-box.error';
-      }
+      }catch(err){ el.textContent='❌ Scraper API未运行'; el.className='result-box.error'; }
     }
 
     async function sendChat(){
@@ -177,28 +151,15 @@
       try{
         const resp=await fetch(CHAT_URL+'/chat/completions',{
           method:'POST',
-          headers:{
-            'Content-Type':'application/json',
-            'X-API-Key':key || 'test'
-          },
-          body:JSON.stringify({
-            model:model,
-            messages:[{role:'user',content:msg}],
-            temperature:0.7
-          })
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({model:model,messages:[{role:'user',content:msg}],temperature:0.7})
         });
         const data=await resp.json();
         if(data.choices && data.choices[0].message){
           el.textContent=data.choices[0].message.content;
           el.className='result-box.success';
-        }else{
-          el.textContent=JSON.stringify(data,null,2);
-          el.className='result-box.error';
-        }
-      }catch(err){
-        el.textContent='❌ Chat API连接失败';
-        el.className='result-box.error';
-      }
+        }else{ el.textContent=JSON.stringify(data,null,2); el.className='result-box.error'; }
+      }catch(err){ el.textContent='❌ Chat API连接失败'; el.className='result-box.error'; }
     }
 
     async function doScrape(){
@@ -211,22 +172,13 @@
       try{
         const resp=await fetch(SCRAPER_URL+'/scrape/url',{
           method:'POST',
-          headers:{
-            'Content-Type':'application/json',
-            'X-API-Key':key || 'test'
-          },
-          body:JSON.stringify({
-            url:url,
-            extract_fields:['title','paragraphs','links']
-          })
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({url:url,extract_fields:['title','paragraphs','links']})
         });
         const data=await resp.json();
         el.textContent=JSON.stringify(data,null,2);
         el.className=data.status==='completed'?'result-box success':'result-box error';
-      }catch(err){
-        el.textContent='❌ Scraper API连接失败';
-        el.className='result-box.error';
-      }
+      }catch(err){ el.textContent='❌ Scraper API连接失败'; el.className='result-box.error'; }
     }
 
     function toggleTheme(){
