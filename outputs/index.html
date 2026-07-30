@@ -81,15 +81,15 @@
   <div class="container">
     <div class="services-grid">
       <div class="service-card">
-        <div class="card-header chat"><div class="card-title">🤖 AI 聊天接口</div><div class="card-desc">多模型对话，支持 GPT/Claude/Ollama</div><span class="card-port">https://chat-api-service-45kp.onrender.com</span></div>
+        <div class="card-header chat"><div class="card-title">🤖 AI 聊天接口</div><div class="card-desc">多模型对话，支持 GPT/Claude/Ollama</div><span class="card-port">http://127.0.0.1:8000</span></div>
         <div class="card-body"><pre>POST /chat/completions{"model":"gpt-3.5-turbo","messages":[{"role":"user","content":"你好"}]}</pre><button class="test-btn btn-chat" onclick="testChat()">测试聊天 API</button><div class="result-box" id="result-chat"></div></div>
       </div>
       <div class="service-card">
-        <div class="card-header data"><div class="card-title">📄 文档转换</div><div class="card-desc">PDF/Excel/Word 格式互转</div><span class="card-port">https://data-api-service.onrender.com</span></div>
+        <div class="card-header data"><div class="card-title">📄 文档转换</div><div class="card-desc">PDF/Excel/Word 格式互转</div><span class="card-port">http://127.0.0.1:8001</span></div>
         <div class="card-body"><pre>GET /health → 检查服务状态支持的格式：PDF, DOCX, XLSX, CSV</pre><button class="test-btn btn-data" onclick="testData()">测试数据 API</button><div class="result-box" id="result-data"></div></div>
       </div>
       <div class="service-card">
-        <div class="card-header scraper"><div class="card-title">🕷️ 网页爬虫</div><div class="card-desc">自动化数据采集，反反爬机制</div><span class="card-port">https://scraper-api-service.onrender.com</span></div>
+        <div class="card-header scraper"><div class="card-title">🕷️ 网页爬虫</div><div class="card-desc">自动化数据采集，反反爬机制</div><span class="card-port">http://127.0.0.1:8002</span></div>
         <div class="card-body"><pre>POST /scrape/url{"url":"https://example.com","extract_fields":["title","paragraphs"]}</pre><button class="test-btn btn-scraper" onclick="testScraper()">测试爬虫 API</button><div class="result-box" id="result-scraper"></div></div>
       </div>
     </div>
@@ -98,10 +98,10 @@
   </div>
   <div class="footer" style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px;">Built with FastAPI · Three services, one dashboard</div>
   <script>
-    // 🔑 三个服务的正确URL - 分别指向各自独立的Render服务！
-    const CHAT_URL = 'https://chat-api-service-45kp.onrender.com';
-    const DATA_URL = 'https://data-api-service.onrender.com';
-    const SCRAPER_URL = 'https://scraper-api-service.onrender.com';
+    // ✅ 三个服务的本地URL - 都指向本地运行的服务！
+    const CHAT_URL = 'http://127.0.0.1:8000';
+    const DATA_URL = 'http://127.0.0.1:8001';
+    const SCRAPER_URL = 'http://127.0.0.1:8002';
 
     async function checkHealth(){
       const services=[
@@ -196,7 +196,7 @@
           el.className='result-box.error';
         }
       }catch(err){
-        el.textContent='❌ Chat API连接失败，请确保 Chat API 已启动';
+        el.textContent='❌ Chat API连接失败';
         el.className='result-box.error';
       }
     }
@@ -224,7 +224,7 @@
         el.textContent=JSON.stringify(data,null,2);
         el.className=data.status==='completed'?'result-box success':'result-box error';
       }catch(err){
-        el.textContent='❌ Scraper API连接失败，请确保 Scraper API 已启动';
+        el.textContent='❌ Scraper API连接失败';
         el.className='result-box.error';
       }
     }
